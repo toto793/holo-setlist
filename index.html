@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ホロライブ記念ライブ セトリ（非公式ファンサイト）</title>
+<style>
+  :root {
+    --bg: #f5f7f9; --card: #ffffff; --text: #1a1a1b; --muted: #65676b;
+    --line: #e6e8eb; --accent: #00a0ee; --accent-soft: #e5f6fe; --row-hover: #f4f9fc;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #15171a; --card: #1e2125; --text: #e8eaed; --muted: #9aa0a6;
+            --line: #2e3238; --accent: #38bdf8; --accent-soft: #11303f; --row-hover: #23282e; }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: system-ui, -apple-system, "Hiragino Sans", "Noto Sans JP", sans-serif;
+         background: var(--bg); color: var(--text); line-height: 1.5; }
+  header { position: sticky; top: 0; z-index: 10; background: var(--card); border-bottom: 1px solid var(--line); }
+  .bar { max-width: 880px; margin: 0 auto; padding: 12px 16px; display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; }
+  h1 { font-size: 1.05rem; margin: 0; color: var(--accent); white-space: nowrap; }
+  nav { display: flex; gap: 4px; }
+  nav button { border: 0; background: none; color: var(--muted); padding: 6px 12px; border-radius: 999px; cursor: pointer; font: inherit; font-size: .9rem; }
+  nav button.active { background: var(--accent-soft); color: var(--accent); font-weight: 600; }
+  main { max-width: 880px; margin: 0 auto; padding: 16px; }
+  .filters { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+  input, select { font: inherit; font-size: .9rem; padding: 8px 12px; border: 1px solid var(--line); border-radius: 999px;
+                  background: var(--card); color: var(--text); outline: none; min-width: 0; }
+  input:focus, select:focus { border-color: var(--accent); }
+  input[type=search] { flex: 1 1 220px; }
+  .count { font-size: .85rem; color: var(--muted); margin: 0 0 12px; }
+  .unofficial { font-size: .68rem; font-weight: 600; color: var(--muted); border: 1px solid var(--line);
+                border-radius: 999px; padding: 1px 8px; margin-left: 6px; vertical-align: middle; white-space: nowrap; }
+  footer p { margin: 0 0 6px; }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 12px; margin-bottom: 12px; overflow: hidden; }
+  .card-head { display: flex; gap: 14px; padding: 12px; cursor: pointer; }
+  .card-head:hover { background: var(--row-hover); }
+  .thumb { width: 168px; flex: none; aspect-ratio: 16/9; border-radius: 8px; object-fit: cover; background: var(--line); }
+  .meta { min-width: 0; }
+  .title { font-weight: 600; font-size: .95rem; margin-bottom: 6px; overflow-wrap: anywhere; }
+  .sub { font-size: .82rem; color: var(--muted); display: flex; flex-wrap: wrap; gap: 4px 10px; align-items: center; }
+  .badge { font-size: .72rem; font-weight: 600; padding: 1px 8px; border-radius: 999px; background: var(--accent-soft); color: var(--accent); }
+  .setlist { display: none; border-top: 1px solid var(--line); padding: 4px 0; margin: 0; list-style: none; }
+  .card.open .setlist { display: block; }
+  .song { display: grid; grid-template-columns: 2.2em 5.2em 1fr; gap: 8px; padding: 7px 16px; align-items: baseline; }
+  .song:hover { background: var(--row-hover); }
+  .song.hit { background: var(--accent-soft); }
+  .no { color: var(--muted); font-size: .8rem; text-align: right; font-variant-numeric: tabular-nums; }
+  .ts { color: var(--accent); font-weight: 600; text-decoration: none; font-size: .85rem; font-variant-numeric: tabular-nums; }
+  .ts:hover { text-decoration: underline; }
+  .name { overflow-wrap: anywhere; }
+  .artist { color: var(--muted); font-size: .85rem; }
+  .note { display: block; color: var(--muted); font-size: .78rem; }
+  .row { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 12px 16px; margin-bottom: 10px; }
+  .row-title { font-weight: 600; display: flex; justify-content: space-between; gap: 12px; }
+  .row-title .n { color: var(--accent); font-size: .85rem; white-space: nowrap; }
+  .occ { list-style: none; padding: 0; margin: 6px 0 0; font-size: .85rem; }
+  .occ li { padding: 3px 0; display: flex; gap: 8px; }
+  .occ a { color: var(--text); text-decoration: none; overflow-wrap: anywhere; }
+  .occ a:hover { color: var(--accent); }
+  .empty { color: var(--muted); text-align: center; padding: 40px 0; }
+  .rank { color: var(--muted); font-variant-numeric: tabular-nums; margin-right: 8px; }
+  footer { max-width: 880px; margin: 0 auto; padding: 8px 16px 32px; font-size: .78rem; color: var(--muted); }
+  @media (max-width: 560px) {
+    .thumb { width: 112px; }
+    .song { grid-template-columns: 1.6em 4.6em 1fr; padding: 7px 12px; }
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="bar">
+    <h1>ホロライブ記念ライブ セトリ <span class="unofficial">非公式ファンサイト</span></h1>
+    <nav>
+      <button data-view="lives" class="active">ライブ一覧</button>
+      <button data-view="songs">曲から探す</button>
+      <button data-view="talents">タレント別</button>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section id="view-lives">
+    <div class="filters">
+      <input type="search" id="q-lives" placeholder="タイトル・曲名で絞り込み">
+      <select id="f-talent"><option value="">全タレント</option></select>
+      <select id="f-kind">
+        <option value="">全種類</option><option>卒業</option><option>生誕</option><option>周年</option><option>3D</option><option>ライブ</option>
+      </select>
+    </div>
+    <p class="count" id="count-lives"></p>
+    <div id="lives"></div>
+  </section>
+
+  <section id="view-songs" hidden>
+    <div class="filters"><input type="search" id="q-songs" placeholder="曲名・アーティスト名で検索"></div>
+    <p class="count" id="count-songs"></p>
+    <div id="songs"></div>
+  </section>
+
+  <section id="view-talents" hidden>
+    <div class="filters"><select id="f-talent2"></select></div>
+    <div id="talents"></div>
+  </section>
+</main>
+<footer id="footer"></footer>
+
+<script src="data/setlists.js"></script>
+<script>
+(() => {
+  const DATA = window.SETLIST_DATA || { lives: [] };
+  const lives = DATA.lives;
+  const $ = (id) => document.getElementById(id);
+  const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  const norm = (s) => s.normalize("NFKC").toLowerCase().replace(/[\s\p{P}\p{S}]/gu, "");
+  const fmt = (t) => {
+    const h = Math.floor(t / 3600), m = Math.floor(t % 3600 / 60), s = t % 60;
+    return (h ? h + ":" + String(m).padStart(2, "0") : m) + ":" + String(s).padStart(2, "0");
+  };
+  const ytUrl = (id, t) => `https://www.youtube.com/watch?v=${id}` + (t != null ? `&t=${t}s` : "");
+  const thumb = (id) => `https://i.ytimg.com/vi/${id}/mqdefault.jpg`;
+
+  // ---- 曲の逆引きインデックス ----
+  const songIndex = new Map();
+  for (const l of lives) for (const s of l.songs) {
+    const key = norm(s.song.replace(/[（(\[【].*?[)）\]】]/g, "")) || norm(s.song);
+    if (!songIndex.has(key)) songIndex.set(key, { song: s.song, artist: s.artist, occ: [] });
+    const e = songIndex.get(key);
+    if (!e.artist && s.artist) e.artist = s.artist;
+    e.occ.push({ live: l, t: s.t });
+  }
+
+  // ---- タレント一覧 ----
+  const talents = [...new Set(lives.map((l) => l.channel))].sort((a, b) => a.localeCompare(b, "ja"));
+  for (const t of talents) {
+    $("f-talent").insertAdjacentHTML("beforeend", `<option>${esc(t)}</option>`);
+    $("f-talent2").insertAdjacentHTML("beforeend", `<option>${esc(t)}</option>`);
+  }
+
+  // ---- ライブ一覧 ----
+  function renderLives() {
+    const q = norm($("q-lives").value), tal = $("f-talent").value, kind = $("f-kind").value;
+    const list = lives.filter((l) =>
+      (!tal || l.channel === tal) && (!kind || l.kind === kind) &&
+      (!q || norm(l.title).includes(q) || l.songs.some((s) => norm(s.song + s.artist).includes(q))));
+    $("count-lives").textContent = `${list.length} 件のライブ`;
+    $("lives").innerHTML = list.length ? list.map((l) => `
+      <article class="card${q ? " open" : ""}">
+        <div class="card-head" data-toggle>
+          <img class="thumb" loading="lazy" src="${thumb(l.id)}" alt="">
+          <div class="meta">
+            <div class="title">${esc(l.title)}</div>
+            <div class="sub"><span class="badge">${esc(l.kind)}</span><span>${esc(l.channel)}</span>
+              <span>${esc(l.date)}</span><span>${l.songs.length}曲</span>
+              <a class="ts" href="${ytUrl(l.id)}" target="_blank" rel="noopener">YouTube ↗</a></div>
+          </div>
+        </div>
+        <ol class="setlist">${l.songs.map((s, i) => `
+          <li class="song${q && norm(s.song + s.artist).includes(q) ? " hit" : ""}">
+            <span class="no">${i + 1}</span>
+            <a class="ts" href="${ytUrl(l.id, s.t)}" target="_blank" rel="noopener">${fmt(s.t)}</a>
+            <span class="name">${esc(s.song)}${s.artist ? ` <span class="artist">/ ${esc(s.artist)}</span>` : ""}
+              ${s.note ? `<span class="note">with ${esc(s.note)}</span>` : ""}</span>
+          </li>`).join("")}
+        </ol>
+      </article>`).join("") : `<p class="empty">該当するライブがありません</p>`;
+  }
+  $("lives").addEventListener("click", (e) => {
+    const head = e.target.closest("[data-toggle]");
+    if (head && !e.target.closest("a")) head.parentElement.classList.toggle("open");
+  });
+
+  // ---- 曲から探す ----
+  function renderSongs() {
+    const q = norm($("q-songs").value);
+    let list = [...songIndex.values()];
+    if (q) list = list.filter((e) => norm(e.song + e.artist).includes(q));
+    list.sort((a, b) => b.occ.length - a.occ.length || a.song.localeCompare(b.song, "ja"));
+    $("count-songs").textContent = `${list.length} 曲`;
+    $("songs").innerHTML = list.length ? list.slice(0, 300).map((e) => `
+      <div class="row">
+        <div class="row-title"><span>${esc(e.song)}${e.artist ? ` <span class="artist">/ ${esc(e.artist)}</span>` : ""}</span>
+          <span class="n">${e.occ.length}回</span></div>
+        <ul class="occ">${e.occ.map((o) => `
+          <li><a class="ts" href="${ytUrl(o.live.id, o.t)}" target="_blank" rel="noopener">${fmt(o.t)}</a>
+              <a href="${ytUrl(o.live.id, o.t)}" target="_blank" rel="noopener">${esc(o.live.channel)}｜${esc(o.live.title)}</a></li>`).join("")}
+        </ul>
+      </div>`).join("") : `<p class="empty">該当する曲がありません</p>`;
+  }
+
+  // ---- タレント別 ----
+  function renderTalents() {
+    const tal = $("f-talent2").value;
+    const own = lives.filter((l) => l.channel === tal);
+    const counts = new Map();
+    for (const l of own) for (const s of l.songs) {
+      const key = norm(s.song.replace(/[（(\[【].*?[)）\]】]/g, "")) || norm(s.song);
+      const e = counts.get(key) || { song: s.song, artist: s.artist, n: 0 };
+      e.n++; counts.set(key, e);
+    }
+    const ranked = [...counts.values()].sort((a, b) => b.n - a.n || a.song.localeCompare(b.song, "ja"));
+    $("talents").innerHTML = `
+      <p class="count">${own.length} ライブ・のべ ${own.reduce((a, l) => a + l.songs.length, 0)} 曲</p>
+      <div class="row"><div class="row-title"><span>よく歌う曲</span></div>
+        <ul class="occ">${ranked.slice(0, 50).map((e, i) => `
+          <li><span class="rank">${i + 1}</span><span>${esc(e.song)}${e.artist ? ` <span class="artist">/ ${esc(e.artist)}</span>` : ""}</span>
+              <span class="n" style="margin-left:auto;color:var(--accent)">${e.n}回</span></li>`).join("")}</ul></div>
+      ${own.map((l) => `<div class="row"><div class="row-title"><span>${esc(l.title)}</span><span class="n">${esc(l.date)}</span></div>
+        <ul class="occ">${l.songs.map((s) => `<li><a class="ts" href="${ytUrl(l.id, s.t)}" target="_blank" rel="noopener">${fmt(s.t)}</a><span>${esc(s.song)}</span></li>`).join("")}</ul></div>`).join("")}`;
+  }
+
+  // ---- タブ切り替え ----
+  document.querySelectorAll("nav button").forEach((b) => b.addEventListener("click", () => {
+    document.querySelectorAll("nav button").forEach((x) => x.classList.toggle("active", x === b));
+    for (const v of ["lives", "songs", "talents"]) $("view-" + v).hidden = v !== b.dataset.view;
+  }));
+
+  $("q-lives").addEventListener("input", renderLives);
+  $("f-talent").addEventListener("change", renderLives);
+  $("f-kind").addEventListener("change", renderLives);
+  $("q-songs").addEventListener("input", renderSongs);
+  $("f-talent2").addEventListener("change", renderTalents);
+
+  renderLives(); renderSongs(); renderTalents();
+  $("footer").innerHTML = `
+    <p>当サイトはファンが個人で運営する<strong>非公式</strong>のファンサイトです。カバー株式会社・ホロライブプロダクションとは一切関係ありません。</p>
+    <p>セトリはYouTubeの視聴者コメントのタイムスタンプから自動で抽出しているため、誤りや漏れを含む場合があります。動画・サムネイルの権利は各権利者に帰属します。</p>
+    <p>更新日 ${esc((DATA.generated_at || "").slice(0, 10))}</p>`;
+})();
+</script>
+</body>
+</html>
